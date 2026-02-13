@@ -1,0 +1,495 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LXGW WenKai Chinese Font - Only for Chinese characters, numbers stay in original font */
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
+@font-face {
+  font-family: 'LXGW WenKai';
+  src: url('/fonts/LXGWWenKai-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
+@layer base {
+  :root {
+    --background: 30 100% 99%;
+    --foreground: 25 33% 18%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Apply Chinese font when language is Chinese */
+  /* The unicode-range in @font-face will automatically select LXGW WenKai for Chinese characters */
+  /* and fall back to Outfit for numbers and English text */
+  html[lang="zh"] body,
+  html[lang="zh-CN"] body {
+    font-family: "LXGW WenKai", var(--font-outfit), system-ui, sans-serif;
+  }
+  
+  /* Apply Chinese font to text elements when language is Chinese */
+  html[lang="zh"] p,
+  html[lang="zh"] span,
+  html[lang="zh"] div,
+  html[lang="zh"] h1,
+  html[lang="zh"] h2,
+  html[lang="zh"] h3,
+  html[lang="zh"] h4,
+  html[lang="zh"] h5,
+  html[lang="zh"] h6,
+  html[lang="zh"] button,
+  html[lang="zh"] label,
+  html[lang="zh"] input,
+  html[lang="zh"] select,
+  html[lang="zh"] textarea,
+  html[lang="zh-CN"] p,
+  html[lang="zh-CN"] span,
+  html[lang="zh-CN"] div,
+  html[lang="zh-CN"] h1,
+  html[lang="zh-CN"] h2,
+  html[lang="zh-CN"] h3,
+  html[lang="zh-CN"] h4,
+  html[lang="zh-CN"] h5,
+  html[lang="zh-CN"] h6,
+  html[lang="zh-CN"] button,
+  html[lang="zh-CN"] label,
+  html[lang="zh-CN"] input,
+  html[lang="zh-CN"] select,
+  html[lang="zh-CN"] textarea {
+    font-family: "LXGW WenKai", var(--font-outfit), system-ui, sans-serif;
+  }
+  
+  /* CRITICAL: Ensure font-display and large text (numbers) always use original fonts */
+  /* This must come after the above rules to override them */
+  html[lang="zh"] .font-display,
+  html[lang="zh-CN"] .font-display,
+  html[lang="zh"] .stat-card [class*="text-2xl"],
+  html[lang="zh"] .stat-card [class*="text-3xl"],
+  html[lang="zh-CN"] .stat-card [class*="text-2xl"],
+  html[lang="zh-CN"] .stat-card [class*="text-3xl"] {
+    font-family: var(--font-fraunces), var(--font-outfit), system-ui, sans-serif !important;
+  }
+  
+  /* Apply Chinese font to elements with Chinese content */
+  .font-chinese {
+    font-family: "LXGW WenKai", var(--font-outfit), system-ui, sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-fika-latte/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-fika-caramel rounded-full hover:bg-fika-cinnamon transition-colors;
+  }
+}
+
+@layer components {
+  .bento-card {
+    @apply bg-white rounded-3xl p-6 shadow-soft border border-fika-latte/50 
+           transition-all duration-300 hover:shadow-glow hover:border-fika-caramel/30;
+  }
+
+  .stat-card {
+    @apply bento-card flex flex-col justify-between min-h-[160px];
+  }
+
+  .btn-primary {
+    @apply bg-fika-espresso text-fika-cream px-6 py-3 rounded-2xl font-medium
+           transition-all duration-300 hover:bg-fika-mocha hover:shadow-lg
+           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-fika-latte text-fika-espresso px-6 py-3 rounded-2xl font-medium
+           transition-all duration-300 hover:bg-fika-caramel/50
+           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply text-fika-cinnamon px-4 py-2 rounded-xl font-medium
+           transition-all duration-300 hover:bg-fika-latte hover:text-fika-espresso
+           active:scale-[0.98];
+  }
+
+  .input-field {
+    @apply w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border-2 border-fika-latte bg-white
+           text-sm sm:text-base text-fika-espresso placeholder:text-fika-cinnamon/60
+           transition-all duration-300
+           focus:outline-none focus:border-fika-honey focus:ring-4 focus:ring-fika-honey/10;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .select-field {
+    @apply input-field appearance-none cursor-pointer
+           bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23C4A484%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')]
+           bg-no-repeat bg-[right_1rem_center];
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-income {
+    @apply badge bg-fika-sage/20 text-fika-sage;
+  }
+
+  .badge-expense {
+    @apply badge bg-fika-berry/20 text-fika-berry;
+  }
+
+  .account-chip {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+           border-2 cursor-pointer transition-all duration-300;
+  }
+
+  .account-chip-active {
+    @apply account-chip border-fika-honey bg-fika-honey/10 text-fika-espresso;
+  }
+
+  .account-chip-inactive {
+    @apply account-chip border-fika-latte bg-white text-fika-cinnamon
+           hover:border-fika-caramel hover:bg-fika-latte/50;
+  }
+
+  /* De-boxed card - no border, subtle background */
+  .card-subtle {
+    @apply bg-fika-latte/30 rounded-3xl p-6 transition-all duration-300;
+  }
+
+  /* Primary card with warm glass effect */
+  .card-glass {
+    @apply glass-warm rounded-3xl p-6 shadow-soft-layered transition-all duration-300;
+  }
+
+  /* Tactile button with press effect */
+  .btn-tactile {
+    @apply relative transform transition-all duration-150;
+  }
+
+  .btn-tactile:active {
+    @apply translate-y-[2px];
+    box-shadow: inset 0 2px 4px rgba(74, 55, 40, 0.15);
+  }
+
+  /* Squishy button effect */
+  .btn-squishy {
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 0.15s ease;
+  }
+
+  .btn-squishy:hover {
+    transform: scale(1.02);
+  }
+
+  .btn-squishy:active {
+    transform: scale(0.96);
+    box-shadow: inset 0 3px 6px rgba(74, 55, 40, 0.2);
+  }
+
+  /* Real "Ticket" Button with perforation notches */
+  .btn-receipt {
+    @apply flex items-center relative font-medium text-sm text-fika-cream transition-all duration-200;
+
+    /* The main button color (Espresso) */
+    background-color: theme("colors.fika.espresso");
+
+    /* Sizing */
+    height: 44px;
+    padding-right: 20px;
+    padding-left: 14px;
+
+    /* Shape: Slight rounding on corners, but distinct ticket shape */
+    border-radius: 12px;
+
+    /* THE TICKET MAGIC:
+       We create two transparent circles (radial gradients) at the top and bottom
+       to simulate the paper punch-outs.
+       - Position: 40px from the left (adjusts where the split happens)
+       - Size: 6px radius (12px hole)
+    */
+    mask-image: radial-gradient(circle at 42px 0, transparent 6px, black 6.5px),
+                radial-gradient(circle at 42px 100%, transparent 6px, black 6.5px);
+
+    /* Vendor prefixes for compatibility */
+    -webkit-mask-image: radial-gradient(circle at 42px 0, transparent 6px, black 6.5px),
+                        radial-gradient(circle at 42px 100%, transparent 6px, black 6.5px);
+
+    /* Combine the masks so both holes appear */
+    mask-composite: exclude;
+    -webkit-mask-composite: source-in;
+  }
+
+  /* The Perforation Line (Dashed) */
+  .btn-receipt::after {
+    content: "";
+    position: absolute;
+    left: 41px; /* Center of the notches */
+    top: 6px;
+    bottom: 6px;
+    border-left: 2px dashed rgba(250, 246, 241, 0.25); /* Faint cream dash */
+    pointer-events: none;
+  }
+
+  .btn-receipt:hover {
+    transform: translateY(-1px);
+    background-color: #5c4533; /* Slightly lighter espresso */
+    box-shadow: 0 4px 12px rgba(74, 55, 40, 0.2);
+  }
+
+  .btn-receipt:active {
+    transform: scale(0.98);
+  }
+
+  /* Floating island style (for header) */
+  .island {
+    @apply glass-frost rounded-full px-4 py-2.5 shadow-soft-layered;
+  }
+
+  .btn-add-transaction {
+    appearance: button;
+    background-color: #5C4033;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 13px 19px;
+    text-align: center;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    transform: translateZ(0);
+    transition: filter .2s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .btn-add-transaction:after {
+    background-clip: padding-box;
+    background-color: #6B4A3A;
+    border: solid transparent;
+    border-radius: 16px;
+    border-width: 0 0 4px;
+    bottom: -4px;
+    content: "";
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  .btn-add-transaction:main,
+  .btn-add-transaction:focus {
+    user-select: auto;
+  }
+
+  .btn-add-transaction:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  .btn-add-transaction:disabled {
+    cursor: auto;
+  }
+
+  .btn-add-transaction:active:after {
+    border-width: 0 0 0px;
+  }
+
+  .btn-add-transaction:active {
+    padding-bottom: 10px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Paper texture noise overlay */
+  .bg-noise {
+    position: relative;
+  }
+
+  .bg-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
+  }
+
+  /* Glassmorphism - warm tint */
+  .glass-warm {
+    background: rgba(250, 246, 241, 0.75);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(219, 201, 184, 0.3);
+  }
+
+  /* Glassmorphism - Liquid Glass (VisionOS style) */
+  .glass-frost {
+    /* 1. The Liquid Gradient:
+       More transparent - starts at 35% and fades to 12% for ultra-transparent liquid glass */
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.12) 100%
+    );
+
+    /* 2. Enhanced Liquid Blur: Increased to 45px for more fluid, liquid appearance */
+    backdrop-filter: blur(45px) saturate(200%);
+    -webkit-backdrop-filter: blur(45px) saturate(200%);
+
+    /* 3. Softer Border: More subtle for ethereal liquid effect */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    /* 4. Enhanced Inner Glow: Stronger highlight for that "liquid volume" feel */
+    box-shadow:
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.8),
+      0 8px 32px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Gradient border that fades */
+  .border-gradient-fade {
+    position: relative;
+    border: none;
+  }
+
+  .border-gradient-fade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(219, 201, 184, 0.5), transparent 60%);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+  }
+
+  /* Receipt jagged edge for transaction history */
+  .receipt-edge {
+    mask-image: linear-gradient(to bottom, black calc(100% - 12px), transparent),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M0 0 L5 12 L10 0 L15 12 L20 0 L20 12 L0 12 Z' fill='black'/%3E%3C/svg%3E");
+    mask-size: 100% calc(100% - 12px), 20px 12px;
+    mask-position: top, bottom;
+    mask-repeat: no-repeat, repeat-x;
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 12px), transparent),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M0 0 L5 12 L10 0 L15 12 L20 0 L20 12 L0 12 Z' fill='black'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% calc(100% - 12px), 20px 12px;
+    -webkit-mask-position: top, bottom;
+    -webkit-mask-repeat: no-repeat, repeat-x;
+  }
+
+  /* Tabular numbers for financial data */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Dramatic number styling */
+  .number-display {
+    @apply font-display tabular-nums tracking-tight;
+  }
+}
+
+/* Recharts customization - minimal, liquid style */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: transparent;
+  stroke-opacity: 0;
+}
+
+.recharts-cartesian-axis-line {
+  display: none;
+}
+
+.recharts-tooltip-wrapper {
+  filter: drop-shadow(0 8px 24px rgba(74, 55, 40, 0.15));
+}
+
+/* Smooth, liquid curve styling */
+.recharts-line-curve,
+.recharts-area-curve {
+  filter: drop-shadow(0 2px 4px rgba(74, 55, 40, 0.1));
+}
+
