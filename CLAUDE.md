@@ -16,38 +16,28 @@ npm run start        # Start production server
 npm run lint         # Run ESLint
 ```
 
-### Database Management
-```bash
-# Update currency exchange rates from CSV
-python3 scripts/update_currency_rates.py
-
-# Query current database state
-python3 scripts/query_currency_rates.py
-```
-
 ## Architecture Overview
 
-### State Management: Context-Aware Local Time Model
+### Storage: Local JSON Files
 
-**Core Philosophy**: Transactions preserve their "local time" (wall-clock time) at creation, independent of timezone changes.
+All data is stored in local JSON files under the `data/` directory (gitignored — contains personal financial data):
+- `data/accounts.json` — Payment accounts
+- `data/categories.json` — Income/expense categories
+- `data/transactions.json` — All financial transactions
+- `data/subscriptions.json` — Recurring subscriptions
+- `data/profile.json` — User settings (currency, language)
+- `data/currency_rates.json` — Historical USD/CNY exchange rates
 
-The app uses a **Context-Aware Local Time** model (implemented in `lib/timezone.ts`):
-- Transactions store `local_date` (what the user saw on their clock) and `timezone_id` (where they were)
-- Display always shows the original local date
-- New transactions default to device's current timezone
-- Users can set a "Home Timezone" preference
-
-Example: A transaction created at "2024-01-15 10:00 AM PST" will always display as Jan 15, even if you view it from Tokyo.
+Data is read/written via `lib/storage.ts` and the Next.js API routes in `app/api/`.
 
 ### Global State: FikaContext
 
 All application state flows through `context/FikaContext.tsx`:
 
 **Data Flow**:
-1. User authentication via Supabase
-2. On login, parallel fetch of: accounts, categories, transactions, subscriptions
-3. State updates trigger re-fetch to maintain sync with database
-4. All CRUD operations go through FikaContext methods
+1. On load, fetch all data from local JSON files via API routes
+2. State updates write back to JSON files to persist
+3. All CRUD operations go through FikaContext methods
 
 **Key Computed Values**:
 - `personalEquity`: Net worth from non-excluded accounts (e.g., excludes credit cards)
@@ -57,103 +47,65 @@ All application state flows through `context/FikaContext.tsx`:
 
 ### Multi-Currency System
 
-Currency conversion is handled in FikaContext:
 - User sets a preferred currency (CNY or USD)
-- Historical exchange rates stored in `currency_rates` table
-- `convertAmount()` function converts transaction amounts to preferred currency
+- Historical exchange rates stored in `data/currency_rates.json`
+- `convertAmount()` converts transaction amounts to preferred currency
 - All displayed totals are in the user's preferred currency
 
 ### Internationalization (i18n)
 
 Bilingual support (English/Chinese) via `context/I18nContext.tsx` and `lib/i18n.ts`:
-- Language preference stored in user profile
+- Language preference stored in profile
 - All UI text uses `t()` function with translation keys
-- Translations organized by feature (auth, dashboard, transactions, etc.)
 
 ### Personal Equity Feature
 
-The app distinguishes between "Total Assets" and "Personal Equity":
 - **Total Assets**: Sum of all account balances (including loans, credit cards)
 - **Personal Equity**: True net worth (excludes accounts marked with `exclude_from_equity`)
-- Two view modes:
-  - **All-time**: Total accumulated equity
-  - **Monthly**: Net change this month from personal accounts only
-
-This allows users to track credit card spending without inflating their net worth.
-
-### Database Schema
-
-Tables (see `supabase-schema.sql`):
-- `profiles`: User settings (currency, language, timezone)
-- `accounts`: Payment accounts with `exclude_from_equity` flag
-- `categories`: Income/expense categories (default + custom)
-- `transactions`: All financial transactions with timezone context
-- `subscriptions`: Recurring subscription tracking
-- `currency_rates`: Historical USD↔CNY exchange rates
-
-**Key Relationships**:
-- All tables use Row Level Security (RLS) - users only access their own data
-- `handle_new_user()` trigger creates default accounts and profile on signup
-- `update_account_balance()` trigger auto-updates account balances on transaction changes
+- Two view modes: **All-time** and **Monthly**
 
 ### Subscription Feature
 
-Tracks recurring services (Netflix, Spotify, etc.):
-- Supports monthly and annual billing cycles
-- Calculates total annual and monthly costs (converted to preferred currency)
-- Shows upcoming payment with urgency indicators (overdue, due soon)
-- Allows pausing subscriptions with `is_active` toggle
+Tracks recurring services:
+- Monthly and annual billing cycles
+- Total annual/monthly costs (converted to preferred currency)
+- Upcoming payment urgency indicators
+- `is_active` toggle for pausing
 
 ## File Organization
 
 ### Critical Files
-- `context/FikaContext.tsx` - Central state management, all data operations
-- `context/I18nContext.tsx` - Language/translation state
-- `lib/timezone.ts` - Timezone utilities for local time model
-- `lib/i18n.ts` - Translation dictionaries
-- `types/database.ts` - TypeScript types generated from Supabase schema
+- `context/FikaContext.tsx` — Central state management, all data operations
+- `context/I18nContext.tsx` — Language/translation state
+- `lib/storage.ts` — Local JSON file read/write utilities
+- `lib/timezone.ts` — Date utilities
+- `lib/i18n.ts` — Translation dictionaries
+- `types/database.ts` — TypeScript type definitions
 
-### Supabase Client Patterns
-- **Browser**: Use `lib/supabase/client.ts` in client components
-- **Server**: Use `lib/supabase/server.ts` in server components/actions
-- **Middleware**: Use `lib/supabase/middleware.ts` for route protection
+### API Routes
+- `app/api/data/[collection]/route.ts` — CRUD API for all data collections
+- `app/api/init/route.ts` — Initialize default data on first run
 
 ### Component Organization
-- `components/` - Reusable UI components
-- `components/ui/` - Base UI primitives (Modal, Icon)
-- `app/` - Next.js App Router pages
-- `app/auth/` - Authentication pages (login, signup, callback)
-- `app/dashboard/` - Main app dashboard
+- `components/` — Reusable UI components
+- `components/ui/` — Base UI primitives (Modal, Icon)
+- `app/dashboard/` — Main app dashboard
 
 ## Development Notes
 
 ### Working with Transactions
-- Always include `timezone_id` and `local_date` when creating transactions
-- Use `getDeviceTimezone()` to get user's current timezone
-- Use `getLocalDateInTimezone()` to calculate correct local date
+- Include `local_date` when creating transactions
+- Use `getTodayLocalDate()` from `lib/timezone.ts` for current date
 
 ### Working with Accounts
 - Check `exclude_from_equity` flag when calculating personal equity
-- Default accounts are created automatically via `handle_new_user()` trigger
-- Account balances auto-update via database trigger - don't update manually
+- Account balances are updated in FikaContext when transactions change
 
 ### Working with Subscriptions
 - Cost can be in any currency (CNY or USD)
-- Billing cycle affects cost calculations (monthly → annual = × 12)
+- Billing cycle affects cost calculations (monthly -> annual = x12)
 - `next_payment_date` determines sort order and urgency
 - Only `is_active` subscriptions count toward totals
-
-### Database Migrations
-- Place migration files in project root (e.g., `migration-add-subscriptions.sql`)
-- Update `supabase-schema.sql` to keep it comprehensive
-- Test migrations in Supabase SQL Editor or via MCP connection
-- Follow existing patterns for RLS policies, indexes, and triggers
-
-### Currency Rate Updates
-- CSV files should contain columns: `time,open,high,low,close`
-- Script uses `close` price as the exchange rate
-- Place CSV in `scripts/` folder or specify custom path
-- Script automatically skips duplicate dates using pagination to fetch all existing rates
 
 ## Claude Code Instructions
 - After each task, automatically run `git add .` and `git commit -m "[description]"` to describe your changes.

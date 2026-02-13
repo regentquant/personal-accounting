@@ -27,8 +27,11 @@ yarn-error.log*
 .env*.local
 .env
 
-# Local data (personal financial data)
-data/*.json
+# Local data (personal financial data - NEVER commit)
+/data/
+
+# MCP config (may contain API tokens)
+.mcp.json
 
 # Vercel
 .vercel
@@ -42,11 +45,3 @@ next-env.d.ts
 .vscode
 *.swp
 *.swo
-
-
-
-
-
-
-
-
