@@ -153,7 +153,7 @@ export function SpendingChart() {
     >
       {/* Top Row: Title on left, Range Switcher on right */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+        <h3 className="section-header">
           {t("chart.spendingTrends")}
         </h3>
 

@@ -588,7 +588,7 @@ export function SettingsModal() {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="User"
-                  className="w-full p-2 rounded-lg border-2 border-fika-latte bg-white text-sm text-fika-espresso focus:outline-none focus:border-fika-honey"
+                  className="input-field"
                   autoFocus
                 />
                 <div className="flex items-center gap-2">
@@ -622,7 +622,7 @@ export function SettingsModal() {
                 </div>
                 <button
                   onClick={() => setIsEditingName(true)}
-                  className="p-2 rounded-lg hover:bg-fika-latte/50 transition-colors"
+                  className="btn-icon hover:bg-fika-latte/50"
                   title={t("common.edit")}
                 >
                   <Icon name="Edit" size={16} className="text-fika-cinnamon" />

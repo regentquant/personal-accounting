@@ -101,7 +101,7 @@ function Breakdown({ type, titleKey, emptyKey, animationDelay = "animate-delay-4
       className={`animate-spring-in section-card ${animationDelay}`}
       style={{ animationFillMode: "both" }}
     >
-      <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium mb-6">
+      <h3 className="section-header mb-6">
         {t(titleKey)}
       </h3>
 

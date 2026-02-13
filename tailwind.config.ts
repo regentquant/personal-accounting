@@ -22,6 +22,7 @@ const config: Config = {
           sage: "#7D9B7A",
           sky: "#6A8FA8",
         },
+        "card-bg": "#FFFCF9",
         background: "#FAF6F1",
         foreground: "#2D1F14",
       },

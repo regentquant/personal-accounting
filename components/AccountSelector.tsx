@@ -74,7 +74,7 @@ export function AccountSelector() {
     >
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+          <h3 className="section-header">
             {t("accounts.title")}
           </h3>
           <p className="text-[10px] text-fika-cinnamon/50 mt-0.5">
@@ -216,7 +216,7 @@ export function AccountSelector() {
                       e.stopPropagation();
                       handleEdit(account.id);
                     }}
-                    className="p-1 hover:bg-fika-latte rounded transition-colors"
+                    className="btn-icon-sm p-1"
                     title="Edit account"
                   >
                     <Icon name="Pencil" size={14} className="text-fika-espresso" />
@@ -227,7 +227,7 @@ export function AccountSelector() {
                       handleDelete(account.id);
                     }}
                     disabled={deletingId === account.id}
-                    className="p-1 hover:bg-fika-berry/10 rounded transition-colors disabled:opacity-50"
+                    className="btn-icon-sm p-1 hover:bg-fika-berry/10 hover:text-fika-berry disabled:opacity-50"
                     title="Delete account"
                   >
                     <Icon

@@ -457,7 +457,7 @@ export function TransactionModal() {
 
               {/* Amount */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-2">
+                <label className="form-label">
                   {t("transaction.amount")}
                 </label>
                 <button
@@ -490,7 +490,7 @@ export function TransactionModal() {
 
               {/* Category Grid */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-1.5">
+                <label className="form-label mb-1.5">
                   {t("transaction.category")}
                 </label>
                 <div className="grid grid-cols-5 gap-1.5">
@@ -522,7 +522,7 @@ export function TransactionModal() {
 
               {/* Account Grid */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-1.5">
+                <label className="form-label mb-1.5">
                   {t("transaction.account")}
                 </label>
                 <div className="grid grid-cols-5 gap-1.5">
@@ -557,7 +557,7 @@ export function TransactionModal() {
             <div className="space-y-4">
               {/* Date */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-2">
+                <label className="form-label">
                   {t("transaction.date")}
                 </label>
                 <input
@@ -570,7 +570,7 @@ export function TransactionModal() {
 
               {/* Currency Selection - Compact Pill Toggle */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-1.5">
+                <label className="form-label mb-1.5">
                   {t("select.currency")}
                 </label>
                 <div className="flex items-center gap-1 p-1 bg-fika-latte/50 rounded-lg w-fit">
@@ -617,7 +617,7 @@ export function TransactionModal() {
 
               {/* Notes - Multi-line textarea for desktop */}
               <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-2">
+                <label className="form-label">
                   {t("transaction.note")}
                 </label>
                 <textarea
@@ -665,7 +665,7 @@ export function TransactionModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 py-2 sm:py-3 px-3 sm:px-6 rounded-lg sm:rounded-2xl bg-fika-latte text-fika-espresso text-xs sm:text-base font-medium transition-all hover:bg-fika-caramel/50"
+              className="btn-secondary flex-1 py-2 sm:py-3 px-3 sm:px-6 text-xs sm:text-base rounded-lg sm:rounded-2xl"
               disabled={loading}
             >
               {t("common.cancel")}
@@ -673,7 +673,7 @@ export function TransactionModal() {
             <button
               type="submit"
               disabled={!isValid || loading}
-              className="flex-1 py-2 sm:py-3 px-3 sm:px-6 rounded-lg sm:rounded-2xl bg-fika-espresso text-white text-xs sm:text-base font-medium transition-all hover:bg-fika-mocha disabled:opacity-50"
+              className="btn-primary flex-1 py-2 sm:py-3 px-3 sm:px-6 text-xs sm:text-base rounded-lg sm:rounded-2xl"
             >
               {loading
                 ? t("transaction.saving")

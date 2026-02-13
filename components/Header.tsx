@@ -45,7 +45,7 @@ export function Header() {
         {/* Settings Button */}
         <button
           onClick={() => setIsSettingsModalOpen(true)}
-          className="p-2 rounded-full text-fika-cinnamon hover:bg-fika-latte/50 hover:text-fika-espresso transition-colors"
+          className="btn-icon rounded-full hover:bg-fika-latte/50"
           title={t("settings.title")}
         >
           <Settings size={18} />
@@ -54,7 +54,7 @@ export function Header() {
         {/* Help Button */}
         <button
           onClick={() => setIsHelpModalOpen(true)}
-          className="p-2 rounded-full text-fika-cinnamon hover:bg-fika-latte/50 hover:text-fika-espresso transition-colors"
+          className="btn-icon rounded-full hover:bg-fika-latte/50"
           title={t("help.title")}
         >
           <HelpCircle size={18} />

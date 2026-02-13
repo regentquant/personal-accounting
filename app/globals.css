@@ -145,6 +145,36 @@
            active:scale-[0.98];
   }
 
+  .btn-danger {
+    @apply bg-fika-berry text-white px-6 py-3 rounded-2xl font-medium
+           transition-all duration-300 hover:bg-fika-berry/90
+           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-danger-outline {
+    @apply px-6 py-3 rounded-xl border-2 border-fika-berry/30 text-fika-berry font-medium
+           transition-all duration-300 hover:bg-fika-berry/10
+           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-xl text-fika-cinnamon
+           hover:bg-fika-latte hover:text-fika-espresso transition-colors;
+  }
+
+  .btn-icon-sm {
+    @apply p-1.5 rounded-lg text-fika-cinnamon
+           hover:bg-fika-latte hover:text-fika-espresso transition-colors;
+  }
+
+  .section-header {
+    @apply text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-fika-espresso mb-2;
+  }
+
   .input-field {
     @apply w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border-2 border-fika-latte bg-white
            text-sm sm:text-base text-fika-espresso placeholder:text-fika-cinnamon/60
@@ -188,15 +218,13 @@
 
   /* De-boxed card - subtle background with light definition */
   .card-subtle {
-    @apply rounded-3xl p-6 shadow-card transition-all duration-300;
-    background-color: #FFFCF9;
+    @apply rounded-3xl p-6 shadow-card transition-all duration-300 bg-card-bg;
     border: 1px solid rgba(80, 60, 50, 0.07);
   }
 
   /* Section card - wraps chart areas, account sections, breakdowns */
   .section-card {
-    @apply rounded-3xl p-6 shadow-card transition-all duration-300;
-    background-color: #FFFCF9;
+    @apply rounded-3xl p-6 shadow-card transition-all duration-300 bg-card-bg;
     border: 1px solid rgba(80, 60, 50, 0.08);
   }
 

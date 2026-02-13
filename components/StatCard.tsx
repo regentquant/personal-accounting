@@ -86,7 +86,7 @@ export function StatCard({
 
       <div className="mt-4">
         {/* Label - small, uppercase, tracked */}
-        <p className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium mb-2">
+        <p className="section-header mb-2">
           {title}
         </p>
 

@@ -219,7 +219,7 @@ export function PersonalEquityTrend() {
         <div className="flex items-center justify-between mb-2 sm:mb-0">
           <div className="flex items-center gap-2">
             <Icon name="TrendingUp" size={18} className="text-fika-honey" />
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+            <h3 className="section-header">
               {t("equity.title")}
             </h3>
           </div>

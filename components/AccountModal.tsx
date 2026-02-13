@@ -135,7 +135,7 @@ export function AccountModal() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-fika-espresso mb-2">
+          <label className="form-label">
             {t("account.name")}
           </label>
           <input
@@ -150,7 +150,7 @@ export function AccountModal() {
 
         {/* Icon Selection */}
         <div>
-          <label className="block text-sm font-medium text-fika-espresso mb-2">
+          <label className="form-label">
             {t("account.icon")}
           </label>
           <div className="grid grid-cols-4 gap-2">
@@ -182,7 +182,7 @@ export function AccountModal() {
 
         {/* Color Selection */}
         <div>
-          <label className="block text-sm font-medium text-fika-espresso mb-2">
+          <label className="form-label">
             {t("account.color")}
           </label>
           <div className="flex gap-2 flex-wrap">
@@ -246,7 +246,7 @@ export function AccountModal() {
         {/* Initial Balance - only show when creating new account */}
         {!editingAccount && (
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("account.initialBalance")}
             </label>
             <div className="relative">
@@ -267,7 +267,7 @@ export function AccountModal() {
 
         {/* Preview */}
         <div>
-          <label className="block text-sm font-medium text-fika-espresso mb-2">
+          <label className="form-label">
             {t("account.preview")}
           </label>
           <div className="flex items-center gap-3 p-4 rounded-xl bg-fika-latte/30">

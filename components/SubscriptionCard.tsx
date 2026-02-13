@@ -44,7 +44,7 @@ export function SubscriptionCard() {
             <Icon name="RefreshCw" size={20} className="text-fika-berry" />
           </div>
           <div>
-            <p className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+            <p className="section-header">
               {t("subscriptions.title")}
             </p>
             <p className="text-xs text-fika-cinnamon/70">
@@ -54,7 +54,7 @@ export function SubscriptionCard() {
         </div>
         <button
           onClick={() => setIsSubscriptionModalOpen(true)}
-          className="p-2 rounded-xl hover:bg-fika-latte transition-colors"
+          className="btn-icon"
           aria-label={t("subscriptions.add")}
         >
           <Icon name="Plus" size={20} className="text-fika-cinnamon" />

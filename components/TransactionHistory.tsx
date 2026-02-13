@@ -143,7 +143,7 @@ export function TransactionHistory() {
       <div className="border-b border-dashed border-fika-caramel/50 pb-4 mb-4">
         {/* Header Row: Title and Select button */}
         <div className="flex items-center justify-between mb-2 sm:mb-0 sm:hidden">
-          <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+          <h3 className="section-header">
             {t("transaction.history")}
           </h3>
           {!editMode ? (
@@ -181,7 +181,7 @@ export function TransactionHistory() {
         {/* Desktop Header Row */}
         <div className="hidden sm:flex sm:items-center justify-between">
           <div className="flex items-center gap-3">
-            <h3 className="text-[11px] uppercase tracking-[0.15em] text-fika-cinnamon font-medium">
+            <h3 className="section-header">
               {t("transaction.history")}
             </h3>
             {editMode && (
@@ -491,13 +491,13 @@ export function TransactionHistory() {
                   <div className="flex items-center gap-0.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => handleEdit(transaction)}
-                      className="p-1.5 rounded-lg text-fika-cinnamon hover:bg-fika-latte hover:text-fika-espresso transition-colors"
+                      className="btn-icon-sm"
                     >
                       <Icon name="Edit2" size={14} />
                     </button>
                     <button
                       onClick={() => handleDelete(transaction.id)}
-                      className="p-1.5 rounded-lg text-fika-cinnamon hover:bg-fika-berry/10 hover:text-fika-berry transition-colors"
+                      className="btn-icon-sm hover:bg-fika-berry/10 hover:text-fika-berry"
                     >
                       <Icon name="Trash2" size={14} />
                     </button>

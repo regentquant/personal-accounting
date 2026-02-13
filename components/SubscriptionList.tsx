@@ -139,7 +139,7 @@ export function SubscriptionList({ onAddNew }: SubscriptionListProps) {
       {/* Add Button */}
       <button
         onClick={onAddNew}
-        className="w-full py-3 rounded-xl bg-fika-espresso text-white font-medium hover:bg-fika-mocha transition-colors flex items-center justify-center gap-2"
+        className="btn-primary w-full flex items-center justify-center gap-2"
       >
         <Icon name="Plus" size={20} />
         {t("subscriptions.add")}

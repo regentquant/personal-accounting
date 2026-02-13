@@ -195,7 +195,7 @@ export function SubscriptionModal() {
 
           {/* Service Name */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.serviceName")}
             </label>
             <input
@@ -210,7 +210,7 @@ export function SubscriptionModal() {
 
           {/* Cost and Currency */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.cost")}
             </label>
             <div className="flex gap-2">
@@ -261,7 +261,7 @@ export function SubscriptionModal() {
 
           {/* Billing Cycle */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.billingCycle")}
             </label>
             <div className="flex rounded-xl overflow-hidden border-2 border-fika-latte">
@@ -294,7 +294,7 @@ export function SubscriptionModal() {
 
           {/* Next Payment Date */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.nextPayment")}
             </label>
             <input
@@ -307,7 +307,7 @@ export function SubscriptionModal() {
 
           {/* Icon Selection */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.icon")}
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -339,7 +339,7 @@ export function SubscriptionModal() {
 
           {/* Color Selection */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.color")}
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -362,7 +362,7 @@ export function SubscriptionModal() {
 
           {/* Note */}
           <div>
-            <label className="block text-sm font-medium text-fika-espresso mb-2">
+            <label className="form-label">
               {t("subscription.note")}
             </label>
             <textarea
@@ -443,7 +443,7 @@ export function SubscriptionModal() {
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="flex-1 py-2.5 px-4 rounded-xl bg-fika-berry text-white font-medium hover:bg-fika-berry/90 transition-colors"
+                    className="btn-danger flex-1 py-2.5 px-4"
                     disabled={loading}
                   >
                     {t("subscription.delete")}
@@ -453,7 +453,7 @@ export function SubscriptionModal() {
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full py-2.5 px-4 rounded-xl border-2 border-fika-berry/30 text-fika-berry font-medium hover:bg-fika-berry/10 transition-colors"
+                  className="btn-danger-outline w-full py-2.5 px-4"
                   disabled={loading}
                 >
                   {t("subscription.delete")}
