@@ -53,7 +53,7 @@ export function StatCard({
         "animate-spring-in p-6",
         variant === "primary"
           ? "card-glass min-h-[200px] flex flex-col justify-between"
-          : "min-h-[160px]",
+          : "section-card min-h-[160px]",
         animationDelay,
         className
       )}

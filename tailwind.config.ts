@@ -35,9 +35,10 @@ const config: Config = {
         "5xl": "2.5rem",
       },
       boxShadow: {
-        soft: "0 2px 15px -3px rgba(74, 55, 40, 0.08), 0 10px 20px -2px rgba(74, 55, 40, 0.05)",
+        soft: "0 1px 8px -2px rgba(74, 55, 40, 0.12), 0 4px 12px -2px rgba(74, 55, 40, 0.08)",
         glow: "0 0 40px -10px rgba(212, 148, 76, 0.25)",
-        "soft-layered": "0 2px 4px rgba(74, 55, 40, 0.05), 0 8px 16px rgba(74, 55, 40, 0.08), 0 24px 48px rgba(74, 55, 40, 0.12)",
+        card: "0 1px 3px rgba(74, 55, 40, 0.06), 0 4px 12px rgba(74, 55, 40, 0.08)",
+        "soft-layered": "0 1px 3px rgba(74, 55, 40, 0.06), 0 6px 14px rgba(74, 55, 40, 0.10), 0 20px 40px rgba(74, 55, 40, 0.14)",
         "tactile-inset": "inset 0 2px 4px rgba(74, 55, 40, 0.15)",
       },
       animation: {

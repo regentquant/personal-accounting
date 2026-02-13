@@ -185,7 +185,7 @@ export function PersonalEquityTrend() {
   if (activeAccountId && isExcludedAccount(activeAccountId)) {
     return (
       <div
-        className="animate-spring-in animate-delay-300 py-6"
+        className="animate-spring-in animate-delay-300 section-card"
         style={{ animationFillMode: "both" }}
       >
         <div className="flex items-center gap-2 mb-4">
@@ -211,7 +211,7 @@ export function PersonalEquityTrend() {
 
   return (
     <div
-      className="animate-spring-in animate-delay-300 py-6"
+      className="animate-spring-in animate-delay-300 section-card"
       style={{ animationFillMode: "both" }}
     >
       {/* Header Row: Title and Info/Toggle buttons */}
@@ -408,11 +408,10 @@ export function PersonalEquityTrend() {
               </linearGradient>
             </defs>
             <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="transparent"
-              strokeOpacity={0}
+              strokeDasharray="4 4"
+              stroke="rgba(80, 60, 50, 0.08)"
               vertical={false}
-              horizontal={false}
+              horizontal={true}
             />
             <XAxis
               dataKey="date"

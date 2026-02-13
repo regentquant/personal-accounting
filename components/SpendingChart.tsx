@@ -148,7 +148,7 @@ export function SpendingChart() {
 
   return (
     <div
-      className="animate-spring-in animate-delay-200 py-6"
+      className="animate-spring-in animate-delay-200 section-card"
       style={{ animationFillMode: "both" }}
     >
       {/* Top Row: Title on left, Range Switcher on right */}
@@ -253,11 +253,10 @@ export function SpendingChart() {
               </linearGradient>
             </defs>
             <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="transparent"
-              strokeOpacity={0}
+              strokeDasharray="4 4"
+              stroke="rgba(80, 60, 50, 0.08)"
               vertical={false}
-              horizontal={false}
+              horizontal={true}
             />
             <XAxis
               dataKey="date"

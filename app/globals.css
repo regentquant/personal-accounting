@@ -118,8 +118,9 @@
 
 @layer components {
   .bento-card {
-    @apply bg-white rounded-3xl p-6 shadow-soft border border-fika-latte/50 
-           transition-all duration-300 hover:shadow-glow hover:border-fika-caramel/30;
+    @apply bg-white rounded-3xl p-6 shadow-soft transition-all duration-300
+           hover:shadow-glow hover:border-fika-caramel/40;
+    border: 1px solid rgba(80, 60, 50, 0.10);
   }
 
   .stat-card {
@@ -185,9 +186,18 @@
            hover:border-fika-caramel hover:bg-fika-latte/50;
   }
 
-  /* De-boxed card - no border, subtle background */
+  /* De-boxed card - subtle background with light definition */
   .card-subtle {
-    @apply bg-fika-latte/30 rounded-3xl p-6 transition-all duration-300;
+    @apply rounded-3xl p-6 shadow-card transition-all duration-300;
+    background-color: #FFFCF9;
+    border: 1px solid rgba(80, 60, 50, 0.07);
+  }
+
+  /* Section card - wraps chart areas, account sections, breakdowns */
+  .section-card {
+    @apply rounded-3xl p-6 shadow-card transition-all duration-300;
+    background-color: #FFFCF9;
+    border: 1px solid rgba(80, 60, 50, 0.08);
   }
 
   /* Primary card with warm glass effect */
@@ -399,10 +409,10 @@
 
   /* Glassmorphism - warm tint */
   .glass-warm {
-    background: rgba(250, 246, 241, 0.75);
+    background: rgba(255, 252, 249, 0.85);
     backdrop-filter: blur(12px) saturate(150%);
     -webkit-backdrop-filter: blur(12px) saturate(150%);
-    border: 1px solid rgba(219, 201, 184, 0.3);
+    border: 1px solid rgba(80, 60, 50, 0.10);
   }
 
   /* Glassmorphism - Liquid Glass (VisionOS style) */
@@ -472,8 +482,12 @@
   }
 }
 
-/* Recharts customization - minimal, liquid style */
-.recharts-cartesian-grid-horizontal line,
+/* Recharts customization - subtle warm grid lines */
+.recharts-cartesian-grid-horizontal line {
+  stroke: rgba(80, 60, 50, 0.08);
+  stroke-dasharray: 4 4;
+}
+
 .recharts-cartesian-grid-vertical line {
   stroke: transparent;
   stroke-opacity: 0;

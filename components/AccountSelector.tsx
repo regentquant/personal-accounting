@@ -69,7 +69,7 @@ export function AccountSelector() {
 
   return (
     <div
-      className="animate-spring-in animate-delay-100 py-4"
+      className="animate-spring-in animate-delay-100 section-card"
       style={{ animationFillMode: "both" }}
     >
       <div className="flex items-center justify-between mb-4">
