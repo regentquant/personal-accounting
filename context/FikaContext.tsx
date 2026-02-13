@@ -19,7 +19,7 @@ import type {
   NewSubscription,
   Profile,
 } from "@/types/database";
-import { getMonthYearFromLocalDate, getDeviceTimezone, getLocalDateInTimezone } from "@/lib/timezone";
+import { getMonthYearFromLocalDate, getTodayLocalDate } from "@/lib/timezone";
 import { useI18n } from "@/context/I18nContext";
 
 type TransactionType = "income" | "expense";
@@ -340,13 +340,11 @@ export function FikaProvider({ children }: { children: React.ReactNode }) {
         category_id: transaction.category_id,
         amount: transaction.amount,
         type: transaction.type,
-        timezone_id: transaction.timezone_id,
         local_date: transaction.local_date,
         currency: transaction.currency,
         id: crypto.randomUUID(),
         date: transaction.date ?? now,
         note: transaction.note ?? null,
-        local_time: transaction.local_time ?? null,
         created_at: now,
         updated_at: now,
       };
@@ -372,13 +370,11 @@ export function FikaProvider({ children }: { children: React.ReactNode }) {
         category_id: t.category_id,
         amount: t.amount,
         type: t.type,
-        timezone_id: t.timezone_id,
         local_date: t.local_date,
         currency: t.currency,
         id: crypto.randomUUID(),
         date: t.date ?? now,
         note: t.note ?? null,
-        local_time: t.local_time ?? null,
         created_at: now,
         updated_at: now,
       }));
@@ -559,9 +555,8 @@ export function FikaProvider({ children }: { children: React.ReactNode }) {
     return account?.exclude_from_equity ?? false;
   }, [accounts]);
 
-  // Use device timezone to determine current month/year
-  const deviceTz = getDeviceTimezone();
-  const todayLocal = getLocalDateInTimezone(deviceTz);
+  // Determine current month/year from local date
+  const todayLocal = getTodayLocalDate();
   const { month: currentMonth, year: currentYear } = getMonthYearFromLocalDate(todayLocal);
 
   const monthlyTransactions = useMemo(() => {

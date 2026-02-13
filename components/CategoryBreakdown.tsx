@@ -6,7 +6,7 @@ import { useFika } from "@/context/FikaContext";
 import { useI18n } from "@/context/I18nContext";
 import { Icon } from "./ui/Icon";
 import { translateCategoryName } from "@/lib/i18n";
-import { getMonthYearFromLocalDate, getDeviceTimezone, getLocalDateInTimezone } from "@/lib/timezone";
+import { getMonthYearFromLocalDate, getTodayLocalDate } from "@/lib/timezone";
 
 type BreakdownType = "expense" | "income";
 
@@ -27,9 +27,8 @@ function Breakdown({ type, titleKey, emptyKey, animationDelay = "animate-delay-4
   );
 
   const categoryData = useMemo(() => {
-    // Determine current month/year using device timezone
-    const deviceTz = getDeviceTimezone();
-    const todayLocal = getLocalDateInTimezone(deviceTz);
+    // Determine current month/year from local date
+    const todayLocal = getTodayLocalDate();
     const { month: currentMonth, year: currentYear } = getMonthYearFromLocalDate(todayLocal);
 
     // Filter this month's transactions

@@ -7,7 +7,7 @@ import { CalculatorKeypad } from "./CalculatorKeypad";
 import { useFika } from "@/context/FikaContext";
 import { useI18n } from "@/context/I18nContext";
 import { cn } from "@/lib/utils";
-import { TIMEZONES, formatTimezoneDisplay, getTimezonesByRegion } from "@/lib/timezone";
+import { getTodayLocalDate } from "@/lib/timezone";
 import Image from "next/image";
 import type { Currency } from "@/lib/i18n";
 import { translateCategoryName } from "@/lib/i18n";
@@ -25,26 +25,23 @@ export function TransactionModal() {
     accounts,
     categories,
   } = useFika();
-  const { t, currency, deviceTimezone, getCurrentLocalDate, getCurrentLocalTime, formatCurrency: formatCurrencyFn, language } = useI18n();
+  const { t, currency, formatCurrency: formatCurrencyFn, language } = useI18n();
 
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [accountId, setAccountId] = useState("");
-  const [date, setDate] = useState(getCurrentLocalDate());
-  const [timezoneId, setTimezoneId] = useState(deviceTimezone);
+  const [date, setDate] = useState(getTodayLocalDate());
   const [transactionCurrency, setTransactionCurrency] = useState<Currency>(currency);
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [continuousEntry, setContinuousEntry] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
-  const [showTimezoneSelector, setShowTimezoneSelector] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   
   const amountInputRef = useRef<HTMLInputElement>(null);
 
   const filteredCategories = categories.filter((c) => c.type === type);
-  const timezonesByRegion = getTimezonesByRegion();
 
   useEffect(() => {
     if (editingTransaction) {
@@ -63,7 +60,6 @@ export function TransactionModal() {
       setAccountId(editingTransaction.account_id);
       // Use local_date if available, fallback to date
       setDate(editingTransaction.local_date || editingTransaction.date);
-      setTimezoneId(editingTransaction.timezone_id || deviceTimezone);
       setTransactionCurrency((editingTransaction.currency as Currency) || currency);
       // Pre-fill note, using empty string if note is null/undefined
       setNote(editingTransaction.note || "");
@@ -71,7 +67,7 @@ export function TransactionModal() {
       // Only reset form when modal is closed (not just when editingTransaction is null)
       resetForm();
     }
-  }, [editingTransaction, deviceTimezone, currency, isTransactionModalOpen]);
+  }, [editingTransaction, currency, isTransactionModalOpen]);
 
   useEffect(() => {
     if (accounts.length > 0 && !accountId) {
@@ -82,19 +78,17 @@ export function TransactionModal() {
   // Update date when modal opens (for new transactions only)
   useEffect(() => {
     if (isTransactionModalOpen && !editingTransaction) {
-      setDate(getCurrentLocalDate());
-      setTimezoneId(deviceTimezone);
+      setDate(getTodayLocalDate());
       setTransactionCurrency(currency); // Reset to user's preferred currency for new transactions
     }
-  }, [isTransactionModalOpen, editingTransaction, getCurrentLocalDate, deviceTimezone, currency]);
+  }, [isTransactionModalOpen, editingTransaction, currency]);
 
   const resetForm = () => {
     setType("expense");
     setAmount("");
     setCategoryId("");
     setAccountId(accounts[0]?.id || "");
-    setDate(getCurrentLocalDate());
-    setTimezoneId(deviceTimezone);
+    setDate(getTodayLocalDate());
     setTransactionCurrency(currency);
     setNote("");
   };
@@ -102,7 +96,6 @@ export function TransactionModal() {
   const handleClose = () => {
     setIsTransactionModalOpen(false);
     setEditingTransaction(null);
-    setShowTimezoneSelector(false);
     setShowCalculator(false);
     resetForm();
   };
@@ -111,8 +104,6 @@ export function TransactionModal() {
     e.preventDefault();
     setLoading(true);
 
-    const localTime = getCurrentLocalTime(timezoneId);
-
     const transactionData = {
       amount: parseFloat(amount),
       type,
@@ -120,9 +111,7 @@ export function TransactionModal() {
       account_id: accountId,
       note: note.trim() || null,
       date: date,
-      timezone_id: timezoneId,
       local_date: date,
-      local_time: localTime,
       currency: transactionCurrency,
     };
 
@@ -398,39 +387,6 @@ export function TransactionModal() {
               </div>
             </div>
 
-            {/* Timezone indicator (collapsible) */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setShowTimezoneSelector(!showTimezoneSelector)}
-                className="flex items-center gap-1.5 text-xs text-fika-cinnamon hover:text-fika-espresso transition-colors"
-              >
-                <Icon name="Globe" size={12} />
-                <span>{formatTimezoneDisplay(timezoneId)}</span>
-                <Icon 
-                  name={showTimezoneSelector ? "ChevronUp" : "ChevronDown"} 
-                  size={12} 
-                />
-              </button>
-              {showTimezoneSelector && (
-                <select
-                  value={timezoneId}
-                  onChange={(e) => setTimezoneId(e.target.value)}
-                  className="w-full mt-2 h-9 px-2 rounded-lg border-2 border-fika-latte bg-white text-xs text-fika-espresso focus:outline-none focus:border-fika-honey"
-                >
-                  {Object.entries(timezonesByRegion).map(([region, tzs]) => (
-                    <optgroup key={region} label={region}>
-                      {tzs.map((tz) => (
-                        <option key={tz.value} value={tz.value}>
-                          {tz.label} ({tz.offset})
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              )}
-            </div>
-
             {/* Continuous Entry Toggle */}
             {!editingTransaction && (
               <div className="flex items-center justify-between py-2 sm:py-3 px-3 sm:px-4 bg-fika-latte/50 rounded-lg sm:rounded-xl">
@@ -657,28 +613,6 @@ export function TransactionModal() {
                     <span>$ USD</span>
                   </button>
                 </div>
-              </div>
-
-              {/* Timezone */}
-              <div>
-                <label className="block text-sm font-medium text-fika-espresso mb-2">
-                  {t("transaction.timezone")}
-                </label>
-                <select
-                  value={timezoneId}
-                  onChange={(e) => setTimezoneId(e.target.value)}
-                  className="input-field"
-                >
-                  {Object.entries(timezonesByRegion).map(([region, tzs]) => (
-                    <optgroup key={region} label={region}>
-                      {tzs.map((tz) => (
-                        <option key={tz.value} value={tz.value}>
-                          {tz.label} ({tz.offset})
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
               </div>
 
               {/* Notes - Multi-line textarea for desktop */}

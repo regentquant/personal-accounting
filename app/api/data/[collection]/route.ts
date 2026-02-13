@@ -40,7 +40,6 @@ export async function GET(
           avatar_url: null,
           currency: "CNY",
           language: "en",
-          timezone: "Asia/Shanghai",
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         });

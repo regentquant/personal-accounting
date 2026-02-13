@@ -4,23 +4,18 @@ import React, { createContext, useContext, useState, useCallback, useEffect, use
 import { readProfile, writeProfile, readData } from "@/lib/storage";
 import type { Language, Currency } from "@/lib/i18n";
 import { getTranslation, formatCurrency as formatCurrencyUtil } from "@/lib/i18n";
-import { getDeviceTimezone, getLocalDateInTimezone, getLocalTimeInTimezone } from "@/lib/timezone";
+import { getTodayLocalDate } from "@/lib/timezone";
 import type { CurrencyRate, Profile } from "@/types/database";
 
 interface I18nContextType {
   language: Language;
   currency: Currency;
-  homeTimezone: string;
-  deviceTimezone: string;
   setLanguage: (lang: Language) => Promise<void>;
   setCurrency: (curr: Currency) => Promise<void>;
-  setHomeTimezone: (tz: string) => Promise<void>;
   t: (key: string) => string;
   formatCurrency: (amount: number) => string;
   convertAmount: (amount: number, fromCurrency: string, date?: string) => number;
   formatConvertedCurrency: (amount: number, fromCurrency: string, date?: string) => string;
-  getCurrentLocalDate: (timezone?: string) => string;
-  getCurrentLocalTime: (timezone?: string) => string;
   loading: boolean;
   currencyRates: CurrencyRate[];
 }
@@ -38,8 +33,6 @@ export function I18nProvider({
 }) {
   const [language, setLanguageState] = useState<Language>(initialLanguage);
   const [currency, setCurrencyState] = useState<Currency>(initialCurrency);
-  const [homeTimezone, setHomeTimezoneState] = useState<string>('Asia/Shanghai');
-  const [deviceTimezone] = useState<string>(getDeviceTimezone());
   const [loading, setLoading] = useState(true);
   const [currencyRates, setCurrencyRates] = useState<CurrencyRate[]>([]);
 
@@ -51,7 +44,6 @@ export function I18nProvider({
         if (profile) {
           setLanguageState((profile.language as Language) || "en");
           setCurrencyState((profile.currency as Currency) || "CNY");
-          setHomeTimezoneState(profile.timezone || 'Asia/Shanghai');
         }
       } catch {
         // Profile may not exist yet on first load
@@ -125,17 +117,6 @@ export function I18nProvider({
     }
   }, []);
 
-  const setHomeTimezone = useCallback(async (tz: string) => {
-    setHomeTimezoneState(tz);
-
-    try {
-      const profile = await readProfile();
-      await writeProfile({ ...profile, timezone: tz, updated_at: new Date().toISOString() });
-    } catch (error) {
-      console.error("Failed to save timezone preference:", error);
-    }
-  }, []);
-
   const t = useCallback((key: string) => {
     return getTranslation(key, language);
   }, [language]);
@@ -149,7 +130,7 @@ export function I18nProvider({
       return amount;
     }
 
-    const targetDate = date || getLocalDateInTimezone(deviceTimezone);
+    const targetDate = date || getTodayLocalDate();
 
     if (fromCurrency === "USD" && currency === "CNY") {
       const rate = getRateForDate("USD", "CNY", targetDate);
@@ -164,37 +145,24 @@ export function I18nProvider({
     }
 
     return amount;
-  }, [currency, deviceTimezone, getRateForDate]);
+  }, [currency, getRateForDate]);
 
   const formatConvertedCurrency = useCallback((amount: number, fromCurrency: string, date?: string): string => {
     const converted = convertAmount(amount, fromCurrency, date);
     return formatCurrencyUtil(converted, currency);
   }, [convertAmount, currency]);
 
-  const getCurrentLocalDate = useCallback((timezone?: string) => {
-    return getLocalDateInTimezone(timezone || deviceTimezone);
-  }, [deviceTimezone]);
-
-  const getCurrentLocalTime = useCallback((timezone?: string) => {
-    return getLocalTimeInTimezone(timezone || deviceTimezone);
-  }, [deviceTimezone]);
-
   return (
     <I18nContext.Provider
       value={{
         language,
         currency,
-        homeTimezone,
-        deviceTimezone,
         setLanguage,
         setCurrency,
-        setHomeTimezone,
         t,
         formatCurrency,
         convertAmount,
         formatConvertedCurrency,
-        getCurrentLocalDate,
-        getCurrentLocalTime,
         loading,
         currencyRates,
       }}

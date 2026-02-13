@@ -18,7 +18,7 @@ import { EquityViewToggle } from "@/components/EquityViewToggle";
 import { useFika } from "@/context/FikaContext";
 import { useI18n } from "@/context/I18nContext";
 import { getMonthName } from "@/lib/utils";
-import { getMonthYearFromLocalDate, getDeviceTimezone, getLocalDateInTimezone } from "@/lib/timezone";
+import { getMonthYearFromLocalDate, getTodayLocalDate } from "@/lib/timezone";
 import { Loader2 } from "lucide-react";
 
 export default function Dashboard() {
@@ -39,9 +39,8 @@ export default function Dashboard() {
 
   // Calculate monthly values with currency conversion and same-period change
   const { monthlyIncome, monthlyExpenses, incomePercentChange, expensePercentChange } = useMemo(() => {
-    // Determine current month/year/day using device timezone
-    const deviceTz = getDeviceTimezone();
-    const todayLocal = getLocalDateInTimezone(deviceTz);
+    // Determine current month/year/day from local date
+    const todayLocal = getTodayLocalDate();
     const { month: currentMonth, year: currentYear } = getMonthYearFromLocalDate(todayLocal);
     
     // Get current day of month (1-31) from local date string (YYYY-MM-DD)

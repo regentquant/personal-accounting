@@ -9,7 +9,6 @@ import Image from "next/image";
 import type { Language, Currency } from "@/lib/i18n";
 import { translateCategoryName, formatCurrency } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { TIMEZONES, getTimezonesByRegion, formatTimezoneDisplay } from "@/lib/timezone";
 import { readProfile, writeProfile } from "@/lib/storage";
 
 type ImportRowPreview = {
@@ -20,7 +19,6 @@ type ImportRowPreview = {
     type: string;
     category: string;
     account: string;
-    timezone?: string;
     currency?: string;
   };
   resolved?: {
@@ -29,7 +27,6 @@ type ImportRowPreview = {
     type: "income" | "expense";
     category_id: string;
     account_id: string;
-    timezone_id: string;
     local_date: string;
     currency: string;
   };
@@ -39,7 +36,7 @@ type ImportRowPreview = {
 
 export function SettingsModal() {
   const { isSettingsModalOpen, setIsSettingsModalOpen } = useFika();
-  const { language, setLanguage, currency, setCurrency, homeTimezone, setHomeTimezone, deviceTimezone, t } = useI18n();
+  const { language, setLanguage, currency, setCurrency, t } = useI18n();
   const { profile, transactions, accounts, categories, addAccount, refreshAccounts, addTransactionsBatch } = useFika();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isImporting, setIsImporting] = useState(false);
@@ -55,8 +52,6 @@ export function SettingsModal() {
   useEffect(() => {
     setDisplayName(profile?.display_name || "");
   }, [profile]);
-
-  const timezonesByRegion = getTimezonesByRegion();
 
   const handleSaveName = async () => {
     setIsSavingName(true);
@@ -86,10 +81,6 @@ export function SettingsModal() {
 
   const handleCurrencyChange = async (curr: "CNY" | "USD") => {
     await setCurrency(curr);
-  };
-
-  const handleTimezoneChange = async (tz: string) => {
-    await setHomeTimezone(tz);
   };
 
   const normalizedCategoryMap = useMemo(() => {
@@ -160,10 +151,9 @@ export function SettingsModal() {
     setIsExporting(true);
 
     try {
-      // Build CSV content with timezone and currency info
+      // Build CSV content
       const lines: string[] = [];
-      // CSV Header - now includes Timezone and Currency
-      lines.push("Date,Amount,Type,Category,Account,Timezone,Currency");
+      lines.push("Date,Amount,Type,Category,Account,Currency");
 
       // Add transactions
       transactions.forEach((transaction) => {
@@ -175,10 +165,8 @@ export function SettingsModal() {
         const type = transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1);
         const categoryName = category?.name || "Unknown";
         const accountName = account?.name || "Unknown";
-        const timezone = transaction.timezone_id || "Asia/Shanghai";
         const transactionCurrency = transaction.currency || "CNY";
 
-        // CSV row: Date,Amount,Type,Category,Account,Timezone,Currency
         lines.push(
           [
             escapeCsvCell(date),
@@ -186,7 +174,6 @@ export function SettingsModal() {
             escapeCsvCell(type),
             escapeCsvCell(categoryName),
             escapeCsvCell(accountName),
-            escapeCsvCell(timezone),
             escapeCsvCell(transactionCurrency),
           ].join(",")
         );
@@ -232,11 +219,11 @@ export function SettingsModal() {
       const categorySalary = translateCategoryName("Salary", language);
       
       const exampleLines = [
-        "Date,Amount,Type,Category,Account,Timezone,Currency",
-        `2025-01-15,100.50,${typeExpense},${categoryFood},Checking Account,Asia/Shanghai,CNY`,
-        `2025-01-16,250.00,${typeIncome},${categorySalary},Checking Account,Asia/Shanghai,CNY`,
-        `2025-01-17,50.00,${typeExpense},${categoryTransport},Checking Account,America/New_York,USD`,
-        `2025-01-18,75.25,${typeExpense},${categoryFood},Cash,Asia/Shanghai,CNY`,
+        "Date,Amount,Type,Category,Account,Currency",
+        `2025-01-15,100.50,${typeExpense},${categoryFood},Checking Account,CNY`,
+        `2025-01-16,250.00,${typeIncome},${categorySalary},Checking Account,CNY`,
+        `2025-01-17,50.00,${typeExpense},${categoryTransport},Checking Account,USD`,
+        `2025-01-18,75.25,${typeExpense},${categoryFood},Cash,CNY`,
       ];
 
       const csvContent = exampleLines.join("\n");
@@ -319,35 +306,16 @@ export function SettingsModal() {
       return { preview: [], missingAccounts };
     }
 
-    // Check if CSV has timezone and currency columns
-    const timezoneColIndex = headerCols.findIndex((c) => c === "timezone");
+    // Check if CSV has currency column
     const currencyColIndex = headerCols.findIndex((c) => c === "currency");
-    const hasTimezoneCol = timezoneColIndex >= 0;
     const hasCurrencyCol = currencyColIndex >= 0;
-
-    // Get valid timezone values for validation
-    const validTimezones = new Set(TIMEZONES.map((tz) => tz.value));
     const validCurrencies = new Set(["CNY", "USD"]);
 
     for (let i = 1; i < lines.length; i++) {
       const rowNumber = i; // 1-based excluding header
       const cells = parseCsvLine(lines[i]);
       const [dateRaw = "", amountRaw = "", typeRaw = "", categoryRaw = "", accountRaw = ""] = cells;
-      const timezoneRaw = hasTimezoneCol && cells[timezoneColIndex] ? cells[timezoneColIndex].trim() : "";
       const currencyRaw = hasCurrencyCol && cells[currencyColIndex] ? cells[currencyColIndex].trim() : "";
-
-      // Require timezone from CSV - no fallback
-      let rowTimezone: string | null = null;
-      if (hasTimezoneCol && timezoneRaw) {
-        if (validTimezones.has(timezoneRaw)) {
-          rowTimezone = timezoneRaw;
-        } else {
-          // Will add error below
-        }
-      } else if (!hasTimezoneCol) {
-        // CSV doesn't have timezone column - this is an error
-        // Will add error below
-      }
 
       // Validate and use currency from CSV if present, otherwise use preferred currency
       let rowCurrency = preferredCurrency;
@@ -355,8 +323,6 @@ export function SettingsModal() {
         const currencyUpper = currencyRaw.toUpperCase();
         if (validCurrencies.has(currencyUpper)) {
           rowCurrency = currencyUpper;
-        } else {
-          // Will add error below
         }
       }
 
@@ -368,21 +334,11 @@ export function SettingsModal() {
           type: typeRaw.trim(),
           category: categoryRaw.trim(),
           account: accountRaw.trim(),
-          timezone: hasTimezoneCol ? timezoneRaw : undefined,
           currency: hasCurrencyCol ? currencyRaw : undefined,
         },
         errors: [],
         warnings: [],
       };
-
-      // Validate timezone - required from CSV
-      if (!hasTimezoneCol) {
-        row.errors.push(`Missing timezone column. CSV must include a "Timezone" column with timezone values (e.g., Asia/Shanghai, America/New_York)`);
-      } else if (!timezoneRaw) {
-        row.errors.push(`Missing timezone value in row. Each row must have a timezone value in the Timezone column.`);
-      } else if (!validTimezones.has(timezoneRaw)) {
-        row.errors.push(`Invalid timezone: ${timezoneRaw}. Must be a supported timezone (e.g., Asia/Shanghai, America/New_York)`);
-      }
 
       // Validate currency if provided in CSV
       if (hasCurrencyCol && currencyRaw) {
@@ -412,14 +368,14 @@ export function SettingsModal() {
         row.errors.push(`Invalid type: ${row.raw.type}`);
       }
 
-      // Category: match case-insensitive, by id or name, with aliases (e.g. Food -> food)
+      // Category
       const catKey = normalizedCategoryMap.normalize(row.raw.category);
       const category_id = normalizedCategoryMap.map.get(catKey);
       if (!category_id) {
         row.errors.push(`Unknown category: ${row.raw.category}`);
       }
 
-      // Account: match case-insensitive; optionally auto-create on confirm
+      // Account
       const accKey = normalizedAccountMap.normalize(row.raw.account);
       const account_id = normalizedAccountMap.map.get(accKey);
       if (!account_id) {
@@ -427,8 +383,7 @@ export function SettingsModal() {
         row.warnings.push(`Account will be created: ${row.raw.account}`);
       }
 
-      if (row.errors.length === 0 && type && category_id && rowTimezone) {
-        // account_id might be missing for now; will be resolved after optional account creation
+      if (row.errors.length === 0 && type && category_id) {
         if (account_id) {
           row.resolved = {
             date: dateStr,
@@ -436,7 +391,6 @@ export function SettingsModal() {
             type,
             category_id,
             account_id,
-            timezone_id: rowTimezone,
             local_date: dateStr,
             currency: rowCurrency,
           };
@@ -513,7 +467,7 @@ export function SettingsModal() {
         await refreshAccounts();
       }
 
-      // 2) Re-resolve account/category ids and build final batch with timezone and currency
+      // 2) Re-resolve account/category ids and build final batch
       const finalBatch: Array<{
         account_id: string;
         category_id: string;
@@ -521,7 +475,6 @@ export function SettingsModal() {
         type: "income" | "expense";
         date: string;
         note?: string | null;
-        timezone_id: string;
         local_date: string;
         currency: string;
       }> = [];
@@ -557,26 +510,9 @@ export function SettingsModal() {
         if (!isIsoDate(dateStr)) next.errors.push(`Invalid date: ${dateStr}`);
 
         if (next.errors.length === 0 && type) {
-          // Use timezone and currency from CSV - timezone is required
-          let resolvedTimezone: string | null = null;
           let resolvedCurrency: "CNY" | "USD" = currency;
-          
-          if (next.raw.timezone) {
-            // Validate timezone from CSV
-            const validTimezones = new Set(TIMEZONES.map((tz) => tz.value));
-            if (validTimezones.has(next.raw.timezone)) {
-              resolvedTimezone = next.raw.timezone;
-            } else {
-              next.errors.push(`Invalid timezone: ${next.raw.timezone}`);
-            }
-          } else if (next.resolved?.timezone_id) {
-            resolvedTimezone = next.resolved.timezone_id;
-          } else {
-            next.errors.push(`Missing timezone value in row`);
-          }
-          
+
           if (next.raw.currency) {
-            // Validate currency from CSV
             const currencyUpper = next.raw.currency.toUpperCase();
             if (currencyUpper === "CNY" || currencyUpper === "USD") {
               resolvedCurrency = currencyUpper as "CNY" | "USD";
@@ -584,29 +520,25 @@ export function SettingsModal() {
           } else if (next.resolved?.currency) {
             resolvedCurrency = next.resolved.currency as "CNY" | "USD";
           }
-          
-          if (resolvedTimezone) {
-            next.resolved = { 
-              date: dateStr, 
-              amount, 
-              type, 
-              category_id, 
-              account_id,
-              timezone_id: resolvedTimezone,
-              local_date: dateStr,
-              currency: resolvedCurrency,
-            };
-            finalBatch.push({
-              date: dateStr,
-              amount,
-              type,
-              category_id,
-              account_id,
-              timezone_id: resolvedTimezone,
-              local_date: dateStr,
-              currency: resolvedCurrency,
-            });
-          }
+
+          next.resolved = {
+            date: dateStr,
+            amount,
+            type,
+            category_id,
+            account_id,
+            local_date: dateStr,
+            currency: resolvedCurrency,
+          };
+          finalBatch.push({
+            date: dateStr,
+            amount,
+            type,
+            category_id,
+            account_id,
+            local_date: dateStr,
+            currency: resolvedCurrency,
+          });
         }
 
         return next;
@@ -753,66 +685,6 @@ export function SettingsModal() {
           </div>
         </div>
 
-        {/* Timezone Selection */}
-        <div>
-          <h3 className="text-sm font-semibold text-fika-espresso mb-3">
-            {t("settings.timezone")}
-          </h3>
-          <p className="text-xs text-fika-cinnamon mb-3">
-            {t("settings.timezoneDescription")}
-          </p>
-
-          {/* Timezone Mismatch Alert */}
-          {deviceTimezone !== homeTimezone && (
-            <div className="mb-3 p-4 rounded-xl bg-fika-honey/10 border-2 border-fika-honey/30 animate-spring-in">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-fika-honey/20 flex items-center justify-center shrink-0">
-                  <Icon name="MapPin" size={16} className="text-fika-honey" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-fika-espresso mb-1">
-                    {t("settings.timezoneMismatch")}
-                  </p>
-                  <p className="text-xs text-fika-cinnamon mb-3">
-                    {t("settings.deviceTimezone")}: <span className="font-medium text-fika-espresso">{formatTimezoneDisplay(deviceTimezone)}</span>
-                  </p>
-                  <button
-                    onClick={() => handleTimezoneChange(deviceTimezone)}
-                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-fika-honey text-white text-sm font-medium hover:bg-fika-honey/90 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Icon name="RefreshCw" size={14} />
-                    <span>{t("settings.syncToDevice")}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <select
-              value={homeTimezone}
-              onChange={(e) => handleTimezoneChange(e.target.value)}
-              className="w-full p-3 rounded-xl border-2 border-fika-latte bg-white text-sm text-fika-espresso focus:outline-none focus:border-fika-honey"
-            >
-              {Object.entries(timezonesByRegion).map(([region, tzs]) => (
-                <optgroup key={region} label={region}>
-                  {tzs.map((tz) => (
-                    <option key={tz.value} value={tz.value}>
-                      {tz.label} ({tz.offset})
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-            <div className="flex items-center gap-2 text-xs text-fika-cinnamon">
-              <Icon name="Info" size={14} />
-              <span>
-                {t("settings.deviceTimezone")}: {formatTimezoneDisplay(deviceTimezone)}
-              </span>
-            </div>
-          </div>
-        </div>
-
         {/* Data Management */}
         <div>
           <h3 className="text-sm font-semibold text-fika-espresso mb-3">
@@ -941,8 +813,6 @@ export function SettingsModal() {
                     {importPreview.map((row) => {
                       const ok = row.errors.length === 0;
                       const systemDate = row.resolved?.local_date || row.raw.date;
-                    const rowTimezone = row.resolved?.timezone_id || row.raw.timezone || "";
-                    const systemTz = rowTimezone ? formatTimezoneDisplay(rowTimezone).split(' ')[0] : "";
                     const category = categories.find((c) => c.id === row.resolved?.category_id);
                     const account = accounts.find((a) => a.id === row.resolved?.account_id);
                     const amount = parseFloat(row.raw.amount);
@@ -1016,7 +886,6 @@ export function SettingsModal() {
                             )}
                             <span className="truncate">
                               {systemDate}
-                              {ok && <span className="text-fika-cinnamon/50"> ({systemTz})</span>}
                             </span>
                           </div>
 

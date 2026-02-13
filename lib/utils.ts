@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import { getDeviceTimezone, getLocalDateInTimezone } from "./timezone";
+import { getTodayLocalDate } from "./timezone";
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -33,8 +33,8 @@ export function formatDate(date: string | Date): string {
  * Uses local_date format (YYYY-MM-DD) to avoid timezone conversion issues
  */
 export function formatRelativeDate(date: string | Date): string {
-  // Get today's date in device timezone
-  const todayStr = getLocalDateInTimezone(getDeviceTimezone());
+  // Get today's local date
+  const todayStr = getTodayLocalDate();
   
   // Parse target date - if YYYY-MM-DD string, use directly
   let targetStr: string;

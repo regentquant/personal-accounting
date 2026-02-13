@@ -31,7 +31,6 @@ export async function POST() {
       avatar_url: null,
       currency: "CNY",
       language: "en",
-      timezone: "Asia/Shanghai",
       created_at: now,
       updated_at: now,
     });

@@ -218,7 +218,6 @@ function GettingStartedEN() {
           <li>Click the ⚙️ Settings button in the top-right corner</li>
           <li>Choose your preferred Language (English or Chinese)</li>
           <li>Select your Currency (CNY or USD)</li>
-          <li>Set your Home Timezone (or let it automatically match your device)</li>
         </ol>
       </div>
 
@@ -286,7 +285,7 @@ function RecordingTransactionsEN() {
         <ol className="list-decimal list-inside space-y-1 text-fika-cinnamon">
           <li>Click the Add Transaction button (receipt-style button in header)</li>
           <li>Choose type: Income 💚 or Expense ❤️</li>
-          <li>Fill in: Amount, Category, Account, Date, Timezone, Currency, Note (optional)</li>
+          <li>Fill in: Amount, Category, Account, Date, Currency, Note (optional)</li>
           <li>Click Save or Add Another for continuous entry</li>
         </ol>
       </div>
@@ -319,19 +318,6 @@ function RecordingTransactionsEN() {
             </ul>
           </div>
         </div>
-      </div>
-
-      <div className="bg-fika-honey/10 border-2 border-fika-honey/30 rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso flex items-center gap-2">
-          <Icon name="MapPin" size={16} className="text-fika-honey" />
-          Transaction Dates & Timezones
-        </h4>
-        <p className="text-fika-cinnamon mb-2">
-          When you create a transaction, Fika remembers the <strong className="text-fika-espresso">local date</strong> (what you saw on your clock) and the <strong className="text-fika-espresso">timezone</strong> where you were.
-        </p>
-        <p className="text-fika-cinnamon">
-          <strong className="text-fika-espresso">Important:</strong> Transaction dates stay the same even if you change your timezone later. A transaction recorded as "December 20" in Beijing will always show as December 20, even if you later change your home timezone to New York.
-        </p>
       </div>
 
       <div>
@@ -512,21 +498,6 @@ function SettingsEN() {
         </ul>
       </div>
 
-      <div className="bg-fika-honey/10 border-2 border-fika-honey/30 rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso flex items-center gap-2">
-          <Icon name="MapPin" size={16} className="text-fika-honey" />
-          Timezone Settings
-        </h4>
-        <p className="text-fika-cinnamon mb-2">
-          <strong className="text-fika-espresso">Home Timezone:</strong> Default timezone for new transactions. Usually matches your device timezone.
-        </p>
-        <p className="text-fika-cinnamon mb-2">
-          <strong className="text-fika-espresso">Timezone Mismatch Alert:</strong> If device timezone differs from home timezone (e.g., you traveled), you'll see an alert with a "Sync to device timezone" button.
-        </p>
-        <p className="text-fika-cinnamon">
-          <strong className="text-fika-espresso">Important:</strong> Transactions remember their original timezone. A transaction recorded as "Dec 20" in Shanghai stays "Dec 20" even if you later change to New York timezone.
-        </p>
-      </div>
     </div>
   );
 }
@@ -540,7 +511,7 @@ function ImportExportEN() {
           Download all transactions as CSV: Settings → Data Management → Export Transactions to CSV
         </p>
         <p className="text-fika-cinnamon text-xs">
-          Includes: Date, Amount, Type, Category, Account, Currency, Timezone, Notes
+          Includes: Date, Amount, Type, Category, Account, Currency
         </p>
       </div>
 
@@ -590,13 +561,6 @@ function FAQEN() {
         <h4 className="font-semibold mb-2 text-fika-espresso">Why doesn't my credit card balance count toward my net worth?</h4>
         <p className="text-fika-cinnamon text-sm">
           Credit cards are debts, not assets. When marked as "Exclude from Equity," they don't count toward Personal Equity (net worth) but still appear in Total Assets.
-        </p>
-      </div>
-
-      <div className="bg-white border-2 border-fika-latte rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso">If I change timezone, will my transaction dates change?</h4>
-        <p className="text-fika-cinnamon text-sm">
-          No. Transactions remember the local date when created, regardless of timezone changes. A transaction recorded as "Dec 20" in Beijing stays "Dec 20" even if you later change to New York timezone.
         </p>
       </div>
 
@@ -658,7 +622,6 @@ function GettingStartedZH() {
           <li>点击右上角的 ⚙️ 设置按钮</li>
           <li>选择您的首选语言（英语或中文）</li>
           <li>选择您的货币（CNY 或 USD）</li>
-          <li>设置您的主时区（或让其自动匹配您的设备）</li>
         </ol>
       </div>
 
@@ -726,7 +689,7 @@ function RecordingTransactionsZH() {
         <ol className="list-decimal list-inside space-y-1 text-fika-cinnamon">
           <li>点击添加交易按钮（标题中的票据样式按钮）</li>
           <li>选择类型：收入 💚 或支出 ❤️</li>
-          <li>填写：金额、类别、账户、日期、时区、货币、备注（可选）</li>
+          <li>填写：金额、类别、账户、日期、货币、备注（可选）</li>
           <li>点击保存或添加另一个以连续输入</li>
         </ol>
       </div>
@@ -759,19 +722,6 @@ function RecordingTransactionsZH() {
             </ul>
           </div>
         </div>
-      </div>
-
-      <div className="bg-fika-honey/10 border-2 border-fika-honey/30 rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso flex items-center gap-2">
-          <Icon name="MapPin" size={16} className="text-fika-honey" />
-          交易日期和时区
-        </h4>
-        <p className="text-fika-cinnamon mb-2">
-          创建交易时，Fika 会记住<strong className="text-fika-espresso">本地日期</strong>（您在时钟上看到的内容）和您所在的<strong className="text-fika-espresso">时区</strong>。
-        </p>
-        <p className="text-fika-cinnamon">
-          <strong className="text-fika-espresso">重要：</strong>即使您稍后更改时区，交易日期也保持不变。在北京记录为"12月20日"的交易将始终显示为12月20日，即使您稍后将主时区更改为纽约。
-        </p>
       </div>
 
       <div>
@@ -952,21 +902,6 @@ function SettingsZH() {
         </ul>
       </div>
 
-      <div className="bg-fika-honey/10 border-2 border-fika-honey/30 rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso flex items-center gap-2">
-          <Icon name="MapPin" size={16} className="text-fika-honey" />
-          时区设置
-        </h4>
-        <p className="text-fika-cinnamon mb-2">
-          <strong className="text-fika-espresso">主时区：</strong>新交易的默认时区。通常与您的设备时区匹配。
-        </p>
-        <p className="text-fika-cinnamon mb-2">
-          <strong className="text-fika-espresso">时区不匹配警报：</strong>如果设备时区与主时区不同（例如，您旅行了），您将看到一个带有"同步到设备时区"按钮的警报。
-        </p>
-        <p className="text-fika-cinnamon">
-          <strong className="text-fika-espresso">重要：</strong>交易记住其原始时区。在上海记录为"12月20日"的交易即使稍后更改为纽约时区也会保持"12月20日"。
-        </p>
-      </div>
     </div>
   );
 }
@@ -980,7 +915,7 @@ function ImportExportZH() {
           下载所有交易为 CSV：设置 → 数据管理 → 导出交易到 CSV
         </p>
         <p className="text-fika-cinnamon text-xs">
-          包括：日期、金额、类型、类别、账户、货币、时区、备注
+          包括：日期、金额、类型、类别、账户、货币
         </p>
       </div>
 
@@ -1030,13 +965,6 @@ function FAQZH() {
         <h4 className="font-semibold mb-2 text-fika-espresso">为什么我的信用卡余额不计入我的净资产？</h4>
         <p className="text-fika-cinnamon text-sm">
           信用卡是债务，不是资产。当标记为"从净资产中排除"时，它们不计入个人净资产（净值），但仍出现在总资产中。
-        </p>
-      </div>
-
-      <div className="bg-white border-2 border-fika-latte rounded-lg p-3">
-        <h4 className="font-semibold mb-2 text-fika-espresso">如果我更改时区，我的交易日期会改变吗？</h4>
-        <p className="text-fika-cinnamon text-sm">
-          不会。交易记住创建时的本地日期，无论时区更改如何。在北京记录为"12月20日"的交易即使稍后更改为纽约时区也会保持"12月20日"。
         </p>
       </div>
 

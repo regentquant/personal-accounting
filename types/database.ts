@@ -30,9 +30,9 @@ export type Transaction = {
   note: string | null;
   created_at: string;
   updated_at: string;
-  timezone_id: string;
+  timezone_id?: string;
   local_date: string;
-  local_time: string | null;
+  local_time?: string | null;
   currency: string;
 };
 
@@ -42,7 +42,7 @@ export type Profile = {
   avatar_url: string | null;
   currency: string;
   language: string;
-  timezone: string;
+  timezone?: string;
   created_at: string;
   updated_at: string;
 };
@@ -87,9 +87,7 @@ export type NewTransaction = {
   type: "income" | "expense";
   date?: string;
   note?: string | null;
-  timezone_id: string;
   local_date: string;
-  local_time?: string | null;
   currency: string;
 };
 

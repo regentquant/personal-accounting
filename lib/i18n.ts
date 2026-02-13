@@ -189,18 +189,6 @@ export const translations = {
     "settings.importWillCreateAccounts": "{count} account(s) will be created automatically",
     "settings.autoCreateAccountsOn": "Auto-create missing accounts: ON",
     "settings.autoCreateAccountsOff": "Auto-create missing accounts: OFF",
-    "settings.timezone": "Timezone",
-    "settings.timezoneDescription": "Your home timezone for date calculations. New transactions will default to your device's timezone.",
-    "settings.deviceTimezone": "Device timezone",
-    "settings.timezoneMismatch": "Your device timezone has changed",
-    "settings.syncToDevice": "Sync to device timezone",
-    "settings.importTimezone": "Import Timezone",
-    "settings.importTimezoneHelp": "Select the timezone these dates were recorded in. The dates will be stored with this timezone context.",
-    "settings.importSourceDate": "Source Date",
-    "settings.importSystemDate": "Stored As",
-    
-    // Transaction timezone
-    "transaction.timezone": "Timezone",
 
     // Help & Manual
     "help.title": "Help & Guide",
@@ -450,18 +438,6 @@ export const translations = {
     "settings.importWillCreateAccounts": "将自动创建 {count} 个账户",
     "settings.autoCreateAccountsOn": "自动创建缺失账户：开",
     "settings.autoCreateAccountsOff": "自动创建缺失账户：关",
-    "settings.timezone": "时区",
-    "settings.timezoneDescription": "您的主时区，用于日期计算。新交易将默认使用您设备的时区。",
-    "settings.deviceTimezone": "设备时区",
-    "settings.timezoneMismatch": "您的设备时区已更改",
-    "settings.syncToDevice": "同步到设备时区",
-    "settings.importTimezone": "导入时区",
-    "settings.importTimezoneHelp": "选择这些日期记录时所在的时区。日期将与此时区信息一起存储。",
-    "settings.importSourceDate": "源日期",
-    "settings.importSystemDate": "存储为",
-    
-    // Transaction timezone
-    "transaction.timezone": "时区",
 
     // Help & Manual
     "help.title": "帮助与指南",
