@@ -68,7 +68,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
         )}
         
         {/* Content */}
-        <div className="flex-1 min-h-0 overflow-hidden p-4 sm:p-6 flex flex-col">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 flex flex-col">
           {children}
         </div>
       </div>
