@@ -463,7 +463,7 @@
     /* 4. Enhanced Inner Glow: Stronger highlight for that "liquid volume" feel */
     box-shadow:
       inset 0 1px 2px 0 rgba(255, 255, 255, 0.8),
-      0 8px 32px rgba(0, 0, 0, 0.06);
+      0 8px 32px rgba(74, 55, 40, 0.08);
   }
 
   /* Gradient border that fades */
